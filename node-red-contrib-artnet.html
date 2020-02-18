@@ -8,6 +8,7 @@
             port: {value: 6454},
             size: {value: 512},
             rate: {value: 40},
+            resendData: {value: -1},
             universe: {value: 0, validate:RED.validators.number()}
         },
         inputs:1,
@@ -44,6 +45,10 @@
      <div class="form-row">
         <label for="node-input-universe"><i class="fa fa-tag"></i> Universe</label>
         <input type="text" id="node-input-universe" placeholder="Universe">
+    </div>
+    <div class="form-row">
+        <label for="node-input-resendData"><i class="fa fa-tag"></i> Resend Data</label>
+        <input type="text" id="node-input-resendData" placeholder="Time in ms to resend the data">
     </div>
 </script>
 

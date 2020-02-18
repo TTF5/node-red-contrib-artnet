@@ -1,7 +1,12 @@
-[![Go to Gunnebo](logo.png)](http://gunnebo.com)
+# node-red-contrib-artnet-plus
+Node-RED node that controls lights via artnet with storage to constantly output artnet so devices don't timeout
 
-# node-red-contrib-artnet
-Node-RED node that controls lights via artnet
+# Forked from node-red-contrib-artnet by gunnebo-ab
+[Goto project](https://github.com/gunnebo-ab/node-red-contrib-artnet)
+
+# Aims of this project
+* Support artnet with memory so it is constantly sent out
+
 
 [Gunnebo](http://www.gunnebo.com/)  (OMX: GUNN) is a multinational corporation headquartered in Gothenburg, Sweden, specializing in security products, services and solutions mainly in the areas of cash management, entrance security, electronic security and safes & vaults. The Gunnebo Group has operations in 32 countries with approximately 5,500 employees (Jan 2016) and a reported global revenue of €660 million for 2015. Gunnebo has been listed on the Stockholm Stock Exchange in Sweden since 1994 and can be found on the NASDAQ OMX Nordic Exchange Stockholm in the Mid Cap Industrials segment.
 

@@ -20,9 +20,11 @@ module.exports = function (RED) {
         this.rate = config.rate || 40;
         this.size = config.size || 512;
         this.universe = config.universe || 0;
+        this.resendData = config.resendData || 0;
 
         this.nodeData = this.flowContext.get("nodeData") || [];
         this.client = artnet.Client.createClient(this.address, this.port);
+        this.sendInterval = undefined;
 
         this.closeCallbacksMap = {};
         //key: channel;
@@ -35,9 +37,18 @@ module.exports = function (RED) {
             node.flowContext.set("nodeData", node.nodeData);
         };
 
+
         this.sendData = function () {
             node.client.send(node.nodeData);
         };
+
+        if(node.resendData > 0 && node.resendData !== undefined){
+            node.sendInterval = setInterval(function() {
+
+                try{node.sendData();}
+                catch(e){}
+            }, node.resendData);
+        }
 
         this.setChannelValue = function (channel, value) {
             node.set(channel, value);
@@ -57,6 +68,7 @@ module.exports = function (RED) {
             node.closeCallbacksMap = {};
         };
         this.clearTransition = function (channel, skipDataSending) {
+            var oldValue = node.get(channel);
             var transition = node.transitionsMap[channel];
             // cancel all timeouts
             if (transition && transition.timeouts) {
@@ -76,6 +88,9 @@ module.exports = function (RED) {
             }
             // remove transition from map
             delete node.transitionsMap[channel];
+
+            //Set the old value as the current
+            node.set(channel, oldValue);
         };
         this.addTransition = function (channel, transition, value) {
             artnetutils.log("Add transition", channel, value);
@@ -112,6 +127,7 @@ module.exports = function (RED) {
         this.on("close", function () {
             node.clearTransitions();
             node.saveDataToContext();
+            clearInterval(node.sendInterval);
         });
 
         this.on('input', function (msg) {
