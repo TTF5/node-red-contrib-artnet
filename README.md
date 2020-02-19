@@ -4,11 +4,12 @@ Node-RED node that controls lights via artnet with storage to constantly output 
 # Forked from node-red-contrib-artnet by gunnebo-ab
 [Goto project](https://github.com/gunnebo-ab/node-red-contrib-artnet)
 
-# Aims of this project
+# Aims of this fork
 * Support artnet with memory so it is constantly sent out
-
-
-[Gunnebo](http://www.gunnebo.com/)  (OMX: GUNN) is a multinational corporation headquartered in Gothenburg, Sweden, specializing in security products, services and solutions mainly in the areas of cash management, entrance security, electronic security and safes & vaults. The Gunnebo Group has operations in 32 countries with approximately 5,500 employees (Jan 2016) and a reported global revenue of €660 million for 2015. Gunnebo has been listed on the Stockholm Stock Exchange in Sweden since 1994 and can be found on the NASDAQ OMX Nordic Exchange Stockholm in the Mid Cap Industrials segment.
+* Fix fading so it doesn't cut to the previous value when fading between fades
+* Have memory so on redeploy it will not return to 0
+* Have memory so you can ask for channel values
+* Will send the dmx output to the node output when the value is changing
 
 ## Install
 
@@ -18,6 +19,21 @@ npm install node-red-contrib-artnet
 ```
 
 ## Using
+
+You can ask for channel values like so
+
+```
+msg.payload = {
+};
+```
+
+It will return an array of values. If the value is null it has not been set and is not being output
+
+```
+msg.payload = {
+  [255, 255]
+};
+```
 
 You can either set a single channel like the following example:
 

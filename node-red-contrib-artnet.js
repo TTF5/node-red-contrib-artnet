@@ -37,15 +37,30 @@ module.exports = function (RED) {
             node.flowContext.set("nodeData", node.nodeData);
         };
 
+        //Send out to the output the current dmx output
+        this.sendState = function() {
+            var formattedNodeData = [];
+            for(var i = 0; i < 512; i++){
+                if(node.nodeData[i] !== null) {formattedNodeData.push(node.nodeData[i]);}
+                else {formattedNodeData.push(undefined);}
+            }
+            node.send({
+                "payload": formattedNodeData
+            });
+        }
 
-        this.sendData = function () {
+        this.sendData = function (resendData) {
             node.client.send(node.nodeData);
+
+            if(resendData !== true) {
+                node.sendState();
+            }
         };
 
         if(node.resendData > 0 && node.resendData !== undefined){
             node.sendInterval = setInterval(function() {
 
-                try{node.sendData();}
+                try{node.sendData(true);}
                 catch(e){}
             }, node.resendData);
         }
@@ -132,6 +147,12 @@ module.exports = function (RED) {
 
         this.on('input', function (msg) {
             var payload = msg.payload;
+
+            //If the payload is empty send the current buffer
+            if(msg.payload == {} || msg.payload === undefined || msg.payload === null) {
+                node.sendState();
+                return;
+            }
 
             var transition = payload.transition;
             var duration = parseInt(payload.duration || 0);

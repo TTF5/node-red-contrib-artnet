@@ -1,6 +1,6 @@
 {
     "name": "node-red-contrib-artnet-plus",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "description": "Node-RED node that controls lights via artnet with memory",
     "dependencies": {
         "artnet-node": "gunnebo-ab/artnet-node"
