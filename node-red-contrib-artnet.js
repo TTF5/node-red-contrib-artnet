@@ -124,14 +124,16 @@ module.exports = function (RED) {
         };
         //endregion
 
-        this.set = function (address, value, transition, transition_time) {
+        this.set = function (address, value, transition, delay, transition_time) {
             if (address > 0) {
-                if (transition) {
-                    node.addTransition(address, transition, value); //TODO move to input
-                    node.fadeToValue(address, parseInt(value), transition_time);
-                } else {
-                    node.nodeData[address - 1] = artnetutils.roundChannelValue(value);
-                }
+                setTimeout(function() {
+                    if (transition) {
+                        node.addTransition(address, transition, value); //TODO move to input
+                        node.fadeToValue(address, parseInt(value), transition_time);
+                    } else {
+                        node.nodeData[address - 1] = artnetutils.roundChannelValue(value);
+                    }
+                }, parseInt(delay || 0));
             }
         };
 
@@ -158,7 +160,7 @@ module.exports = function (RED) {
             var duration = parseInt(payload.duration || 0);
 
             node.universe = payload.universe || config.universe || 0;
-            node.client.UNVERSE = [node.universe, 0];
+            node.client.UNIVERSE = [node.universe, 0];
 
             if (payload.start_buckets && Array.isArray(payload.start_buckets)) {
                 for (var i = 0; i < payload.start_buckets.length; i++) {
@@ -199,11 +201,13 @@ module.exports = function (RED) {
                 }
             } else {
                 if (payload.channel) {
-                    node.set(payload.channel, payload.value, transition, duration);
+                    node.set(payload.channel, payload.value, transition, 0, duration);
                 } else if (Array.isArray(payload.buckets)) {
                     for (var i = 0; i < payload.buckets.length; i++) {
-                        node.clearTransition(payload.buckets[i].channel, true);
-                        node.set(payload.buckets[i].channel, payload.buckets[i].value, transition, duration);
+                        let bucket = payload.buckets[i];
+                        node.clearTransition(bucket.channel, true);
+                        let delay = parseInt(bucket.delay || 0);
+                        node.set(bucket.channel, bucket.value, transition, delay, duration);
                     }
                     if (!transition) {
                         node.sendData();

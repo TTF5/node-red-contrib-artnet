@@ -1,8 +1,10 @@
-# node-red-contrib-artnet-plus
+# node-red-contrib-artnet2
 Node-RED node that controls lights via artnet with storage to constantly output artnet so devices don't timeout
 
-# Forked from node-red-contrib-artnet by gunnebo-ab
-[Goto project](https://github.com/gunnebo-ab/node-red-contrib-artnet)
+# Forked from node-red-contrib-artnet by haydendonald and gunnebo-ab
+[Goto Fork](https://github.com/haydendonald/node-red-contrib-artnet)
+
+[Goto Original](https://github.com/gunnebo-ab/node-red-contrib-artnet)
 
 # Aims of this fork
 * Support artnet with memory so it is constantly sent out
@@ -10,6 +12,7 @@ Node-RED node that controls lights via artnet with storage to constantly output 
 * Have memory so on redeploy it will not return to 0
 * Have memory so you can ask for channel values
 * Will send the dmx output to the node output when the value is changing
+* Delay for individual bucket elements (inspired by [node-red-contrib-artnetnode](https://github.com/klein0r/node-red-contrib-artnet-node))
 
 ## Install
 
@@ -64,6 +67,19 @@ msg.payload={
     buckets: [
       {channel: 1, value: 255},
       {channel: 4, value: 0},
+    ]
+}
+```
+
+Add Delay to individual channels:
+
+```
+msg.payload={
+    transition: "linear",
+    duration: 500,
+    buckets: [
+      {channel: 1, value: 255, delay: 0},
+      {channel: 1, value: 0, delay: 1000},
     ]
 }
 ```
