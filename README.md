@@ -18,7 +18,7 @@ Node-RED node that controls lights via artnet with storage to constantly output 
 
 Run the following command in the root directory of your Node-RED install. Usually this is `~/.node-red`
 ```
-npm install node-red-contrib-artnet
+npm install node-red-contrib-artnet2
 ```
 
 ## Using
